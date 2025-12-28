@@ -1,0 +1,7 @@
+{
+  "name": "web-hd-ai",
+  "version": "1.0.0",
+  "dependencies": {
+    "replicate": "^1.0.1"
+  }
+}
