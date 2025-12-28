@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI HD Photo Upscaler</title>
+    <title>HD Photo Engine - No AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-5">
-    <div class="max-w-md w-full bg-slate-800 p-8 rounded-2xl shadow-2xl text-center">
-        <h1 class="text-2xl font-bold mb-2">HD Foto AI</h1>
-        <p class="text-slate-400 text-sm mb-6">Ubah foto buram jadi tajam (4x Lipat)</p>
-        
-        <input type="file" id="foto" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4">
-        
-        <button id="btn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">PROSES JADI HD</button>
-        
-        <div id="loading" class="hidden mt-4 animate-pulse text-blue-400">Sedang diproses AI...</div>
-        
-        <div id="hasil" class="hidden mt-6">
-            <p class="text-xs mb-2">Hasil HD:</p>
-            <img id="imgHasil" src="" class="rounded-lg shadow-lg mb-4 mx-auto">
-            <a id="download" href="#" target="_blank" class="text-blue-400 underline text-sm">Download Hasil</a>
+<body class="bg-black text-white font-sans">
+    <div class="flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-lg bg-zinc-900 border border-zinc-800 p-8 rounded-3xl shadow-2xl">
+            <h1 class="text-3xl font-black tracking-tighter mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">HD ENGINE v1</h1>
+            <p class="text-zinc-500 text-sm mb-8">Pemrosesan gambar resolusi tinggi tanpa batas limit AI.</p>
+
+            <div class="border-2 border-dashed border-zinc-700 rounded-2xl p-6 mb-6 hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('foto').click()">
+                <p class="text-zinc-400 text-center text-xs">Ketuk untuk pilih foto</p>
+                <input type="file" id="foto" accept="image/*" class="hidden">
+            </div>
+
+            <button id="btn" class="w-full bg-white text-black font-bold py-4 rounded-2xl active:scale-95 transition shadow-lg">BOOST TO HD</button>
+
+            <div id="loading" class="hidden mt-6 text-center">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-blue-500"></div>
+                <p class="text-xs text-zinc-500 mt-2">PROCESSING RESOLUTION...</p>
+            </div>
+
+            <div id="hasil" class="hidden mt-8 space-y-4">
+                <img id="imgHasil" src="" class="w-full rounded-xl border border-zinc-700 shadow-xl">
+                <a id="download" href="#" target="_blank" class="block w-full text-center bg-zinc-800 py-3 rounded-xl text-sm font-semibold hover:bg-zinc-700">SIMPAN FOTO HD</a>
+            </div>
         </div>
     </div>
 
@@ -28,13 +35,12 @@
         const btn = document.getElementById('btn');
         btn.onclick = async () => {
             const file = document.getElementById('foto').files[0];
-            if(!file) return alert('Pilih foto dulu!');
+            if(!file) return alert('Pilih foto!');
 
             btn.disabled = true;
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('hasil').classList.add('hidden');
 
-            // Ubah foto ke Base64 (teks) agar bisa dikirim
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
@@ -45,13 +51,12 @@
                         body: JSON.stringify({ image: reader.result })
                     });
                     const data = await res.json();
-                    
                     if(data.url) {
                         document.getElementById('imgHasil').src = data.url;
                         document.getElementById('download').href = data.url;
                         document.getElementById('hasil').classList.remove('hidden');
-                    } else { alert("Gagal! Coba lagi."); }
-                } catch (e) { alert("Error koneksi!"); }
+                    }
+                } catch (e) { alert("Error!"); }
                 finally {
                     btn.disabled = false;
                     document.getElementById('loading').classList.add('hidden');
